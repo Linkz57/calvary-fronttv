@@ -4,6 +4,7 @@
 ## should this script be automatically updated every time it runs?
 ## note: this doesn't stop you from manually typing
   ## cd fronttv_script ; git pull
+## but without the two leading ## symbols
 autoUpdate=false
 
 directoryOfThisScript='/home/fronttv/fronttv_script'
