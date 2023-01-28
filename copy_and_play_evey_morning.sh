@@ -1,36 +1,43 @@
 #!/bin/bash
 
 
+## should this script be automatically updated every time it runs?
+## note: this doesn't stop you from manually typing
+  ## cd fronttv_script ; git pull
+autoUpdate=false
+
 directoryOfThisScript='/home/fronttv/fronttv_script'
 
 ## stop any videos that are currently playing before syncing down changes
 killall vlc
 
 
-
-# ## check for updates to this script
-# showMeWhatYouGot="$(
-# 	cd "$directoryOfThisScript" &&
-# 	git fetch 2> /dev/null &&
-# 	git diff "$(giot symbolic-ref HEAD |
-# 	cut -d'/' -f3)" FETCH_HEAD --name-only |
-# 	cat
-# )"
-# if [ -z "$showMeWhatYouGot" ]
-# then
-# 	## no update found
-# 	true
-# else
-# 	## update found
-# 	if cd "$directoryOfThisScript" && git pull
-# 	then
-# 		bash "$directoryOfThisScript/copy_and_play_evey_morning.sh"
-# 		exit 0
-# 	else
-# 		## pulling changes failed; continuing anyway
-# 		true
-# 	fi ## updating
-# fi ## if no update found
+if $autoUpdate
+then
+	## check for updates to this script
+	showMeWhatYouGot="$(
+		cd "$directoryOfThisScript" &&
+		git fetch 2> /dev/null &&
+		git diff "$(giot symbolic-ref HEAD |
+		cut -d'/' -f3)" FETCH_HEAD --name-only |
+		cat
+	)"
+	if [ -z "$showMeWhatYouGot" ]
+	then
+		## no update found
+		true
+	else
+		## update found
+		if cd "$directoryOfThisScript" && git pull
+		then
+			bash "$directoryOfThisScript/copy_and_play_evey_morning.sh"
+			exit 0
+		else
+			## pulling changes failed; continuing anyway
+			true
+		fi ## updating
+	fi ## if no update found
+fi ## is auto update enabled
 
 
 
