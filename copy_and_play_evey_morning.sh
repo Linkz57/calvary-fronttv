@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-directoryOfThisScript=''
+directoryOfThisScript='/home/fronttv/fronttv_script'
 
 ## stop any videos that are currently playing before syncing down changes
 killall vlc
