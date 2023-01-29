@@ -92,7 +92,7 @@ else
 
 	## copy all files in the Google Drive folder "Slide Shows / frontv" to this thing's local storage.
 	## also delete from this thing's local storage any files that weren't in the Google Drive folder.
-	rsync -a --delete-after '/home/fronttv/googledrive/Slide Shows/fronttv/.' /home/fronttv/local_copy_of_googledrive_videos/
+	rsync -a --delete-after '/home/fronttv/googledrive/Slide Shows/fronttv/.' /home/fronttv/local_copy_of_cloud_videos/
 
 
 	## since the mount-test succeeded, let's tell VLC to play in fullscreen
@@ -104,6 +104,6 @@ fi
 
 ## then play all things (videos, music, whatever. possibly pictures too) 
 ## with fullscreen, no On Screen Display, loop forever, and including subfolders.
-vlc $maybeFullscreen --no-osd --loop --recursive --open /home/fronttv/local_copy_of_googledrive_videos/ 
+vlc $maybeFullscreen --no-osd --loop --recursive --open /home/fronttv/local_copy_of_cloud_videos/
 
 
