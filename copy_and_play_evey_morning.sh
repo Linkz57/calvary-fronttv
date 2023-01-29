@@ -44,18 +44,11 @@ fi ## is auto update enabled
 
 
 
-## mount the drive now. Maybe it'll work,
-## maybe it'll complain it's already mounted,
-## maybe the authenticaton will have failed, who knows.
-/home/fronttv/.opam/default/bin/google-drive-ocamlfuse /home/fronttv/googledrive
 
 
 ## test to see if there's any files in there
-if [ -z "$(find '/home/fronttv/googledrive/Slide Shows/fronttv/' -type f)" ]
+if rclone ls dropbox:/front_tv
 then
-	## if not, then run the authentication program, which might pop up a browser screen asking for a login
-	/home/fronttv/.opam/default/bin/google-drive-ocamlfuse
-
 	( 
 
 		## Show a graphical error box.
@@ -88,11 +81,13 @@ then
 	## As implimented, this exit code does nothing, but it makes future integration slightly easier.
 	#exit 1
 else
-	## IF the mount failed, do the above stuff. ELSE, if the mount succeeded then do this rsync stuff.
+	## IF there's no files in the cloud, do the above stuff. ELSE, if files have been found then copy them down and play them.
 
-	## copy all files in the Google Drive folder "Slide Shows / frontv" to this thing's local storage.
+
+	## copy all files in the dropbox folder "front_tv" to this thing's local storage.
 	## also delete from this thing's local storage any files that weren't in the Google Drive folder.
-	rsync -a --delete-after '/home/fronttv/googledrive/Slide Shows/fronttv/.' /home/fronttv/local_copy_of_cloud_videos/
+	rclone sync -P --delete-after dropbox:/front_tv/ /home/fronttv/local_copy_of_cloud_videos/
+	#rsync -a --delete-after '/home/fronttv/googledrive/Slide Shows/fronttv/.' /home/fronttv/local_copy_of_cloud_videos/
 
 
 	## since the mount-test succeeded, let's tell VLC to play in fullscreen
