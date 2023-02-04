@@ -7,10 +7,15 @@
 ## but without the two leading ## symbols
 autoUpdate=false
 
+
+
 directoryOfThisScript='/home/fronttv/fronttv_script'
+
+
 
 ## stop any videos that are currently playing before syncing down changes
 killall vlc
+
 
 
 if $autoUpdate
@@ -19,7 +24,7 @@ then
 	showMeWhatYouGot="$(
 		cd "$directoryOfThisScript" &&
 		git fetch 2> /dev/null &&
-		git diff "$(giot symbolic-ref HEAD |
+		git diff "$(git symbolic-ref HEAD |
 		cut -d'/' -f3)" FETCH_HEAD --name-only |
 		cat
 	)"
@@ -49,6 +54,18 @@ fi ## is auto update enabled
 ## test to see if there's any files in there
 if rclone ls dropbox:/front_tv
 then
+	## if files were found where I expect, then copy them down.
+
+	## copy all files in the dropbox folder "front_tv" to this thing's local storage.
+	## also delete from this thing's local storage any files that weren't in the Dropbox folder.
+	rclone sync -a --delete-after dropbox:/front_tv/ /home/fronttv/local_copy_of_cloud_videos/
+
+	## since the above rclone test succeeded, let's tell VLC to play in fullscreen
+	maybeFullscreen='--fullscreen'
+else
+	## IF I found files in the cloud where I expected, do the above stuff.
+	## ELSE, if files have been NOT been found, copy them down and play them.
+
 	( 
 
 		## Show a graphical error box.
@@ -80,18 +97,6 @@ then
 	## One is a different number than zero, so here you go.
 	## As implimented, this exit code does nothing, but it makes future integration slightly easier.
 	#exit 1
-else
-	## IF there's no files in the cloud, do the above stuff. ELSE, if files have been found then copy them down and play them.
-
-
-	## copy all files in the dropbox folder "front_tv" to this thing's local storage.
-	## also delete from this thing's local storage any files that weren't in the Google Drive folder.
-	rclone sync -P --delete-after dropbox:/front_tv/ /home/fronttv/local_copy_of_cloud_videos/
-	#rsync -a --delete-after '/home/fronttv/googledrive/Slide Shows/fronttv/.' /home/fronttv/local_copy_of_cloud_videos/
-
-
-	## since the mount-test succeeded, let's tell VLC to play in fullscreen
-	maybeFullscreen='--fullscreen'
 fi
 
 
