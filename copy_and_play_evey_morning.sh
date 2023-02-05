@@ -6,6 +6,7 @@
   ## cd fronttv_script ; git pull
 ## but without the two leading ## symbols
 autoUpdate=false
+## set the above variable to either true or false
 
 
 
@@ -20,6 +21,7 @@ killall vlc
 
 if $autoUpdate
 then
+	echo "checking for updates"
 	## check for updates to this script
 	showMeWhatYouGot="$(
 		cd "$directoryOfThisScript" &&
@@ -31,16 +33,16 @@ then
 	if [ -z "$showMeWhatYouGot" ]
 	then
 		## no update found
-		true
+		echo "no updates found; continuing"
 	else
 		## update found
 		if cd "$directoryOfThisScript" && git pull
 		then
+			echo "found an update; I'm gonna run this whole script again."
 			bash "$directoryOfThisScript/copy_and_play_evey_morning.sh"
 			exit 0
 		else
-			## pulling changes failed; continuing anyway
-			true
+			echo "pulling changes failed; continuing anyway..."
 		fi ## updating
 	fi ## if no update found
 fi ## is auto update enabled
@@ -58,7 +60,7 @@ then
 
 	## copy all files in the dropbox folder "front_tv" to this thing's local storage.
 	## also delete from this thing's local storage any files that weren't in the Dropbox folder.
-	rclone sync -a --delete-after dropbox:/front_tv/ /home/fronttv/local_copy_of_cloud_videos/
+	rclone sync --delete-after dropbox:/front_tv/ /home/fronttv/local_copy_of_cloud_videos/
 
 	## since the above rclone test succeeded, let's tell VLC to play in fullscreen
 	maybeFullscreen='--fullscreen'
